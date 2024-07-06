@@ -1,0 +1,19 @@
+@if (Auth::user()->hasLiked($idea))
+    <!--UNLIKE BUTTON-->
+    <form action="{{ route('ideas.unlike', $idea) }}" method="post" class="fw-light nav-link fs-6">
+        @csrf
+        @method('post')
+        <button>
+            <span class="fas fa-heart me-1">
+            </span> {{ $idea->likes()->count() }}</button>
+    </form>
+@else
+    <!--LIKE BUTTON-->
+    <form action="{{ route('ideas.like', $idea) }}" method="post" class="fw-light nav-link fs-6">
+        @csrf
+        @method('post')
+        <button>
+            <span class="far fa-heart me-1">
+            </span> {{ $idea->likes()->count() }}</button>
+    </form>
+@endif

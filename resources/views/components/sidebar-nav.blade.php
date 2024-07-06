@@ -7,14 +7,16 @@
                         <span>Home</span></a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link {{ Route::is('feed') ? 'text-white bg-primary' : '' }}" href="{{ route('feed') }}">
+                        <span>Feed</span></a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="/terms">
                         <span>Terms</span></a>
                 </li>
 
             </ul>
         </div>
-        <div class="card-footer text-center py-2">
-            <a class="btn btn-link btn-sm" href="/profile">View Profile </a>
-        </div>
+
     </div>
 </div>

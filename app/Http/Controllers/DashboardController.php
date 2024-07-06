@@ -44,7 +44,6 @@ class DashboardController extends Controller
 
     public function show(Idea $idea)
     {
-
         return view('pages/show-one', ['idea' => $idea, 'commentable' => true]);
     }
 

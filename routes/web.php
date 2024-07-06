@@ -3,12 +3,17 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FeedController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+// Only the people you follow show up
+Route::get('/feed', FeedController::class)->middleware('auth')->name('feed');
+
 
 Route::group(['prefix' => '/ideas', 'as' => 'ideas.', 'middleware' => ['auth']], function () {
 
@@ -62,8 +67,9 @@ Route::group(['prefix' => '/users', 'as' => 'users.', 'middleware' => ['auth']],
     Route::post('/{user}/unfollow', [UserController::class, 'unfollow'])->name('unfollow');
 });
 
-Route::post('ideas/{idea}/like', [LikeController::class, 'like'])->name('ideas.like');
-// Route::post('ideas/{idea}/unlike', [LikeController::class, 'unlike'])->name('unlike');
+
+Route::post('ideas/{idea}/like', [LikeController::class, 'like'])->middleware('auth')->name('ideas.like');
+Route::post('ideas/{idea}/unlike', [LikeController::class, 'unlike'])->middleware('auth')->name('ideas.unlike');
 
 
 

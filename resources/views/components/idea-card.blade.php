@@ -7,22 +7,13 @@
                 <div>
                     <h5 class="card-title mb-0"><a href={{ route('users.show', ['user' => $idea->user]) }}>
                             {{ $idea->user->username ?? 'No user' }}
-                            {{--  This framework is really fucking smart innit --}}
                         </a></h5>
                 </div>
-
             </div>
 
-            @if (auth()->id() === $idea->user->id)
-                <form action={{ route('ideas.destroy', ['idea' => $idea]) }} method="post">
-                    @csrf
-                    @method('delete')
+            <span class="fs-6 fw-light text-muted"> <span class="fas fa-clock"> </span>
+                {{ $idea->created_at->diffForHumans() }} </span>
 
-                    <a href={{ route('ideas.edit', $idea->id) }}>Edit</a>
-
-                    <button type="submit">🗑️</button>
-                </form>
-            @endif
 
 
 
@@ -54,34 +45,30 @@
         @endif
         <div class="d-flex justify-content-between">
             <div>
-                @if (auth()->user()->hasLiked(auth()->user(), $idea))
-                    <form action="{{ route('ideas.unlike', $idea) }}" method="post" class="fw-light nav-link fs-6">
-                        @csrf
-                        @method('post')
-                        <button>
-                            <span class="fas fa-heart me-1">
-                            </span> {{ $idea->likes()->count() }}</button>
-                    </form>
-                @else
-                    <form action="{{ route('ideas.like', $idea) }}" method="post" class="fw-light nav-link fs-6">
-                        @csrf
-                        @method('post')
-                        <button>
-                            <span class="fas fa-heart me-1">
-                            </span> {{ $idea->likes()->count() }}</button>
-                    </form>
-                @endif
+                @auth {{-- Checks if there is a user logged in --}}
+                    @include('components.like-button')
+                @endauth
+            </div>
 
-            </div>
-            <div>
-                <span class="fs-6 fw-light text-muted"> <span class="fas fa-clock"> </span>
-                    {{ $idea->created_at }} </span>
-            </div>
         </div>
 
-        <a href={{ route('ideas.show', $idea->id) }}>
-            Comment
-        </a>
-        @include('components.comment-form')
+        @auth {{-- Checks if there is a user logged in --}}
+
+            <div class="d-flex align-items-center justify-content-between"><a href={{ route('ideas.show', $idea->id) }}>
+                    Comment
+                </a>
+
+
+                <form action={{ route('ideas.destroy', ['idea' => $idea]) }} method="post">
+                    @csrf
+                    @method('delete')
+
+                    <a href={{ route('ideas.edit', $idea->id) }}>Edit</a>
+
+                    <button type="submit">🗑️</button>
+                </form>
+            </div>
+            @include('components.comment-form')
+        @endauth
     </div>
 </div>
