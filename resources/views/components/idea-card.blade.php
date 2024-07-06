@@ -65,7 +65,8 @@
 
                     <a href={{ route('ideas.edit', $idea->id) }}>Edit</a>
 
-                    <button type="submit">🗑️</button>
+                    <button type="submit" class="btn btn-danger btn-sm d-flex align-items-center justify-content-center"
+                        style="width:35px;height:25px;">x</button>
                 </form>
             </div>
             @include('components.comment-form')

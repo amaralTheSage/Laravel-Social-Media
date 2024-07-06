@@ -26,6 +26,8 @@
             </button>
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
+
+
                     @guest
                         <li class="nav-item">
                             <a class="nav-link {{ Route::is('login') ? 'active' : '' }}" aria-current="page"
@@ -36,7 +38,15 @@
                         </li>
                     @endguest
 
-                    @auth()
+                    @auth
+                        @if (Auth::user()->is_admin)
+                            <li class="nav-item">
+                                <a class="nav-link {{ Route::is('admin.dashboard') ? 'active' : '' }}" aria-current="page"
+                                    href="{{ route('admin.dashboard') }}">Admin</a>
+                            </li>
+                        @endif
+
+
                         <li class="nav-item">
                             <a class="nav-link {{ Route::is('users.show') ? 'active' : '' }}" {{-- incorrect --}}
                                 href="{{ route('users.show', ['user' => Auth::user()->id]) }}">{{ Auth::user()->username }}</a>

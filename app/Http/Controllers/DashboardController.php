@@ -37,6 +37,16 @@ class DashboardController extends Controller
             $ideas = $ideas->where('content', 'like', '%' .  $request->get('search-input') . '%');
         }
 
+        // Who-to-follow-logic
+        $whoToFollow = User::all();
+
+        if (Auth::user()) {
+            $followedByUser = Auth::user()->followings()->pluck('user_id'); // grabs the id of all the people the user is following
+            $followedByUser = [...$followedByUser, auth()->id()];
+            $whoToFollow = User::whereNotIn('id', $followedByUser)->get();
+        }
+
+
         return view('pages.feed', [
             'ideas' => $ideas->paginate(5), 'commentable' => false
         ]);

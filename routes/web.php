@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DashboardController;
@@ -53,9 +54,6 @@ Route::get('/logout', [AuthController::class, 'logout']);
 
 
 // Users routes
-// Route::resource('users', UserController::class)->only(['show', 'edit', 'update']);
-
-
 Route::group(['prefix' => '/users', 'as' => 'users.', 'middleware' => ['auth']], function () {
     Route::get('/{user}', [UserController::class, 'show'])->name('show')->withoutMiddleware('auth');
 
@@ -63,15 +61,18 @@ Route::group(['prefix' => '/users', 'as' => 'users.', 'middleware' => ['auth']],
 
     Route::patch('/{user}', [UserController::class, 'update'])->name('update');
 
+    //  FOLLOW ROUTES
     Route::post('/{user}/follow', [UserController::class, 'follow'])->name('follow');
     Route::post('/{user}/unfollow', [UserController::class, 'unfollow'])->name('unfollow');
 });
 
 
+// LIKING ROUTES
 Route::post('ideas/{idea}/like', [LikeController::class, 'like'])->middleware('auth')->name('ideas.like');
 Route::post('ideas/{idea}/unlike', [LikeController::class, 'unlike'])->middleware('auth')->name('ideas.unlike');
 
-
+// ADMIN ROUTES
+Route::get('/admin', [AdminDashboardController::class, 'index'])->middleware(['auth', 'admin'])->name('admin.dashboard');
 
 // Other pages' routes
 Route::get('/terms', function () {
