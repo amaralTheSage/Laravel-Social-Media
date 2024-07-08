@@ -17,9 +17,9 @@
                                     <p class="fs-6 text-muted">{{ $user->email }}</p>
                                 </div>
                             </div>
-                            @if (Auth::id() === $user->id)
+                            @can('update', $user)
                                 <a href="{{ route('users.edit', ['user' => $user]) }}">Edit</a>
-                            @endif
+                            @endcan
                         </div>
                         <div class="px-2 mt-4">
                             <h5 class="fs-5"> About : </h5>

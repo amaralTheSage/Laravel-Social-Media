@@ -53,21 +53,29 @@
         </div>
 
         @auth {{-- Checks if there is a user logged in --}}
-
-            <div class="d-flex align-items-center justify-content-between"><a href={{ route('ideas.show', $idea->id) }}>
-                    Comment
-                </a>
+            <div class="d-flex align-items-center justify-content-between">
 
 
-                <form action={{ route('ideas.destroy', ['idea' => $idea]) }} method="post">
-                    @csrf
-                    @method('delete')
+                @if ($commentable ?? false)
+                @else
+                    <a href={{ route('ideas.show', $idea->id) }}>
+                        Comment
+                    </a>
+                @endif
 
-                    <a href={{ route('ideas.edit', $idea->id) }}>Edit</a>
 
-                    <button type="submit" class="btn btn-danger btn-sm d-flex align-items-center justify-content-center"
-                        style="width:35px;height:25px;">x</button>
-                </form>
+                {{-- @if (Gate::authorize('delete')) // This works the same way --}}
+                @can('delete', $idea)
+                    <form action={{ route('ideas.destroy', ['idea' => $idea]) }} method="post">
+                        @csrf
+                        @method('delete')
+                        <a href={{ route('ideas.edit', $idea->id) }}>Edit</a>
+
+
+                        <button type="submit" class="btn btn-danger btn-sm d-flex align-items-center justify-content-center"
+                            style="width:35px;height:25px;">x</button>
+                    </form>
+                @endcan
             </div>
             @include('components.comment-form')
         @endauth

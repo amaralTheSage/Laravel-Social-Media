@@ -5,65 +5,61 @@
         <div class="row">
             @include('components.sidebar-nav')
             <div class="col-6">
-                @if (Auth::user()->id !== $user->id)
-                    <h2>Nothing to see here buddy</h2>
-                @else
-                    <form method="post" enctype="multipart/form-data" action="{{ route('users.update', $user->id) }}"
-                        class="card">
-                        @csrf
-                        @method('patch')
 
-                        <div class="px-3 pt-4 pb-2">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="d-flex align-items-center ">
+                <form method="post" enctype="multipart/form-data" action="{{ route('users.update', $user->id) }}"
+                    class="card">
+                    @csrf
+                    @method('patch')
 
-                                    <div>
-                                        <img style="width:150px" class="me-3 avatar-sm rounded-circle"
-                                            src={{ $user->getImageUrl() }} alt="{{ $user->username }}">
+                    <div class="px-3 pt-4 pb-2">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center ">
 
-                                        <input type="file" name="image-input" id="image-input" class="form-control mt-3">
+                                <div>
+                                    <img style="width:150px" class="me-3 avatar-sm rounded-circle"
+                                        src={{ $user->getImageUrl() }} alt="{{ $user->username }}">
 
-                                        @error('image-input')
-                                            <p>{{ $message }}</p>
-                                        @enderror
-                                    </div>
+                                    <input type="file" name="image-input" class="form-control mt-3">
+
+                                    @error('image-input')
+                                        <p>{{ $message }}</p>
+                                    @enderror
+                                </div>
 
 
 
-                                    <div>
-                                        <input class="form-control" type="text" value="{{ $user->username }}"
-                                            name="username-input" />
-                                        <p class="fs-6 text-muted">{{ $user->email }}</p>
+                                <div>
+                                    <input class="form-control" type="text" value="{{ $user->username }}"
+                                        name="username-input" />
+                                    <p class="fs-6 text-muted">{{ $user->email }}</p>
 
-                                        @error('username-input')
-                                            <span>{{ $message }}</span>
-                                        @enderror
-                                    </div>
-
+                                    @error('username-input')
+                                        <span>{{ $message }}</span>
+                                    @enderror
                                 </div>
 
                             </div>
-                            <div class="px-2 mt-4">
-                                <h5 class="fs-5"> Biography : </h5>
-                                <textarea name="bio-input" type="text" class="form-control" value="Tell us about yourself..." rows="3"> {{ $user->bio ?? '' }}</textarea>
-                                @error('bio-input')
-                                    <span>{{ $message }}</span>
-                                @enderror
 
-                                <button class="btn btn-dark btn-sm my-3 " type="submit">Save</button>
-                            </div>
-                            <div class="d-flex ms-2">
-                                <a href="#" class="fw-light nav-link fs-6 me-3"> <span class="fas fa-user me-1">
-                                    </span> 0 Followers </a>
-                                <a href="#" class="fw-light nav-link fs-6 me-3"> <span class="fas fa-brain me-1">
-                                    </span> {{ $user->ideas()->count() }} </a>
-                                <a href="#" class="fw-light nav-link fs-6"> <span class="fas fa-comment me-1">
-                                    </span> {{ $user->comments()->count() }} </a>
-                            </div>
                         </div>
-                    </form>
-                @endif
+                        <div class="px-2 mt-4">
+                            <h5 class="fs-5"> Biography : </h5>
+                            <textarea name="bio-input" type="text" class="form-control" value="Tell us about yourself..." rows="3"> {{ $user->bio ?? '' }}</textarea>
+                            @error('bio-input')
+                                <span>{{ $message }}</span>
+                            @enderror
 
+                            <button class="btn btn-dark btn-sm my-3 " type="submit">Save</button>
+                        </div>
+                        <div class="d-flex ms-2">
+                            <a href="#" class="fw-light nav-link fs-6 me-3"> <span class="fas fa-user me-1">
+                                </span> 0 Followers </a>
+                            <a href="#" class="fw-light nav-link fs-6 me-3"> <span class="fas fa-brain me-1">
+                                </span> {{ $user->ideas()->count() }} </a>
+                            <a href="#" class="fw-light nav-link fs-6"> <span class="fas fa-comment me-1">
+                                </span> {{ $user->comments()->count() }} </a>
+                        </div>
+                    </div>
+                </form>
             </div>
             <div class="col-3">
                 @include('components.who-to-follow')

@@ -7,6 +7,7 @@ use App\Models\Idea;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use PHPUnit\Framework\MockObject\Rule\Parameters;
 
 class DashboardController extends Controller
@@ -31,7 +32,7 @@ class DashboardController extends Controller
         // Idea::without('user') would disable eager loading.
 
         // $ideas  =  Idea::with('user', 'comments.user')->orderByDesc('created_at');
-        $ideas  =  Idea::orderByDesc('created_at');
+        $ideas  =  Idea::withCount('likes')->orderByDesc('created_at');
 
         if ($request->has('search-input')) {
             $ideas = $ideas->where('content', 'like', '%' .  $request->get('search-input') . '%');
@@ -54,13 +55,13 @@ class DashboardController extends Controller
 
     public function show(Idea $idea)
     {
+
         return view('pages/show-one', ['idea' => $idea, 'commentable' => true]);
     }
 
 
     public function store(Request $request)
     {
-
         $validated = request()->validate(['contentBox' => 'required|max:300']);
 
         $validated['user_id'] = auth()->id();
@@ -72,35 +73,25 @@ class DashboardController extends Controller
 
     public function destroy(Idea $idea)
     {
-        if (auth()->id() !== $idea->user_id) {
-            abort(404);
-        }
-
+        Gate::authorize('delete', $idea);
         Idea::destroy($idea->id);
-
         return redirect('/')->with('sucess', 'Idea deleted succesfully!');
     }
 
     public function edit(Idea $idea)
     {
-
-        if (auth()->id() !== $idea->user_id) {
-            abort(404);
-        }
-
+        Gate::authorize('update', $idea);
         $editing = true;
-        return view('pages/show-one', compact('ideas', 'editing'));
+        $commentable = false;
+
+        return view('pages/show-one', compact('idea', 'editing', 'commentable'));
     }
 
 
     public function update(Idea $idea)
     {
-        if (auth()->id() !== $idea->user_id) {
-            abort(404);
-        }
-
+        Gate::authorize('update', $idea);
         $validated = request()->validate(['contentBox' => 'required|max:300']);
-
         $idea->update($validated);
 
         return redirect()->route('ideas.show', ['idea' => $idea->id]);

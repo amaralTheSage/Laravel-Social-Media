@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
@@ -37,20 +39,18 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
+        Gate::authorize('update', $user);
         return view('pages.edit-profile', ['user' => $user]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(User $user, UpdateUserRequest $request)
     {
+        Gate::authorize('update', $user);
 
-        $validated = $request->validate([
-            'username-input' => 'min:5|max:30',
-            'image-input' => 'nullable|image',
-            'bio-input' => 'nullable|min:1|max:255',
-        ]);
+        $validated = $request->validated();
 
         if ($request->has('image-input')) {
             $imagePath = $request->file('image-input')->store('profile', 'public');
@@ -59,7 +59,7 @@ class UserController extends Controller
             Storage::disk('public')->delete($user->image);
         }
 
-        $user->update(['username' => $validated['username-input'], 'image' => $validated['image-input'], 'bio' => $validated['bio-input']]);
+        $user->update(['username' => $validated['username-input'], 'image' => ($validated['image-input'] ?? $user->image), 'bio' => $validated['bio-input']]);
 
         return redirect()->route('users.show', $user);
     }

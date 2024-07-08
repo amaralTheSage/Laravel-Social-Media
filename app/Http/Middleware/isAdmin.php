@@ -15,6 +15,8 @@ class isAdmin
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
+
+    // Replaced with the admin Gate, just keeping it here for reference
     public function handle(Request $request, Closure $next): Response
     {
         if (!Auth::user()->is_admin) {

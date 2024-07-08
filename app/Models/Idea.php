@@ -14,6 +14,8 @@ class Idea extends Model
     // 'user':id,username'
     // This would be very important on a large scale application
 
+    protected $withCount = ['likes'];
+
     protected $fillable = ['user_id', 'content'];
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
